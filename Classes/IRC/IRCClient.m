@@ -488,6 +488,7 @@
     _conn.host = host;
     _conn.port = _config.port;
     _conn.useSSL = _config.useSSL;
+    _conn.useSSLCertificateVerification = _config.useSSLCertificateVerification;
     _conn.encoding = _config.encoding;
 
     switch (_config.proxyType) {
@@ -2682,7 +2683,7 @@
         [self printBoth:(c ?: (id)chname) type:LINE_TYPE_JOIN text:text timestamp:m.timestamp];
     }
 
-    //@@@ check auto op
+    // TBD: check auto op
 
     // add user to talk
     c = [self findChannel:nick];
@@ -2905,7 +2906,7 @@
                         [c changeMember:_myNick mode:mode value:plus];
                         c.isOp = m.isOp;
                         if (!prev && c.isOp && c.isWhoInit) {
-                            // @@@ check all auto op
+                            // TBD: check all auto op
                         }
                     }
                 }
@@ -3015,7 +3016,7 @@
         if (!user.length) user = _config.nick;
         if (!pass.length) pass = @"";
 
-        NSString* base = [NSString stringWithFormat:@"%@\0%@\0%@", _config.nick, user, pass];
+        NSString* base = [NSString stringWithFormat:@"%@\0%@\0%@", user, user, pass];
         NSData* data = [base dataUsingEncoding:_encoding];
         NSString* authStr = [GTMBase64 stringByEncodingData:data];
         [self send:AUTHENTICATE, authStr, nil];
@@ -3452,7 +3453,7 @@
                 }
 
                 if ([c numberOfMembers] > 1) {
-                    // @@@add to who queue
+                    // TBD: add to who queue
                 }
                 else {
                     c.isWhoInit = YES;

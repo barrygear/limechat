@@ -136,9 +136,9 @@
 
     int k = [e keyCode];
     NSUInteger m = [e modifierFlags];
-    BOOL ctrl  = (m & NSControlKeyMask) != 0;
-    BOOL alt   = (m & NSAlternateKeyMask) != 0;
-    BOOL cmd   = (m & NSCommandKeyMask) != 0;
+    BOOL ctrl  = (m & NSEventModifierFlagControl) != 0;
+    BOOL alt   = (m & NSEventModifierFlagOption) != 0;
+    BOOL cmd   = (m & NSEventModifierFlagCommand) != 0;
 
     //LOG(@"keyDown: %d %d", k, m);
 
@@ -178,10 +178,10 @@
 
     int k = [e keyCode];
     NSUInteger m = [e modifierFlags];
-    BOOL ctrl = (m & NSControlKeyMask) != 0;
-    BOOL shift = (m & NSShiftKeyMask) != 0;
-    BOOL alt = (m & NSAlternateKeyMask) != 0;
-    BOOL cmd = (m & NSCommandKeyMask) != 0;
+    BOOL ctrl = (m & NSEventModifierFlagControl) != 0;
+    BOOL shift = (m & NSEventModifierFlagShift) != 0;
+    BOOL alt = (m & NSEventModifierFlagOption) != 0;
+    BOOL cmd = (m & NSEventModifierFlagCommand) != 0;
 
     //LOG(@"performKeyEquivalent: %d %d", k, m);
 
@@ -288,10 +288,10 @@
 
     NSMutableString* s = [NSMutableString string];
 
-    BOOL ctrl  = (_modifierFlags & NSControlKeyMask) != 0;
-    BOOL alt   = (_modifierFlags & NSAlternateKeyMask) != 0;
-    BOOL shift = (_modifierFlags & NSShiftKeyMask) != 0;
-    BOOL cmd   = (_modifierFlags & NSCommandKeyMask) != 0;
+    BOOL ctrl  = (_modifierFlags & NSEventModifierFlagControl) != 0;
+    BOOL alt   = (_modifierFlags & NSEventModifierFlagOption) != 0;
+    BOOL shift = (_modifierFlags & NSEventModifierFlagShift) != 0;
+    BOOL cmd   = (_modifierFlags & NSEventModifierFlagCommand) != 0;
 
     if (ctrl)  [s appendString:CTRL];
     if (alt)   [s appendString:ALT];
@@ -334,9 +334,9 @@
     //
     NSBezierPath* path = [self borderPath];
     [path setLineWidth:1];
-    [[NSColor whiteColor] set];
+    [[NSColor textBackgroundColor] set];
     [path fill];
-    [[NSColor colorWithCalibratedWhite:0.6 alpha:1] set];
+    [[NSColor controlLightHighlightColor] set];
     [path stroke];
 
     //
@@ -368,13 +368,16 @@
         NSRect circleRect = [self eraseButtonFrame];
         NSRect xRect = NSInsetRect(circleRect, 4.1, 4.1);
 
-        NSColor* circleColor = _eraseButtonHighlighted ? [NSColor grayColor] : [NSColor lightGrayColor];
+        // Erase button
+        NSColor* circleColor = _eraseButtonHighlighted ? [NSColor colorNamed:@"highlightedEraseButton"] : [NSColor colorNamed:@"eraseButton"];
+        //NSColor* circleColor = _eraseButtonHighlighted ? [NSColor grayColor] : [NSColor lightGrayColor];
         [circleColor set];
         NSBezierPath* circlePath = [NSBezierPath bezierPath];
         [circlePath appendBezierPathWithOvalInRect:circleRect];
         [circlePath fill];
 
-        [[NSColor whiteColor] set];
+        // X
+        [[NSColor controlBackgroundColor] set];
         NSBezierPath* linesPath = [NSBezierPath bezierPath];
         [linesPath setLineCapStyle:NSRoundLineCapStyle];
         [linesPath setLineWidth:1.5];
@@ -396,11 +399,11 @@
     static NSDictionary* placeholderAttribute = nil;
     if (!placeholderAttribute) {
         NSMutableParagraphStyle* ps = [NSMutableParagraphStyle new];
-        [ps setAlignment:NSCenterTextAlignment];
+        [ps setAlignment:NSTextAlignmentCenter];
 
         placeholderAttribute = @{
             NSFontAttributeName: [NSFont systemFontOfSize:12],
-            NSForegroundColorAttributeName: [NSColor colorWithCalibratedWhite:0.4 alpha:1],
+            NSForegroundColorAttributeName: [NSColor placeholderTextColor],
             NSParagraphStyleAttributeName: ps,
         };
     }
@@ -412,11 +415,11 @@
     static NSDictionary* normalAttribute = nil;
     if (!normalAttribute) {
         NSMutableParagraphStyle* ps = [NSMutableParagraphStyle new];
-        [ps setAlignment:NSCenterTextAlignment];
+        [ps setAlignment:NSTextAlignmentCenter];
 
         normalAttribute = @{
             NSFontAttributeName: [NSFont systemFontOfSize:12],
-            NSForegroundColorAttributeName: [NSColor blackColor],
+            NSForegroundColorAttributeName: [NSColor controlTextColor],
             NSParagraphStyleAttributeName: ps,
         };
     }
